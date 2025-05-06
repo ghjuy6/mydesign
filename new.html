@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design & DayDream | Transform Your Space With Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS */
+        .hero-banner {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://plus.unsplash.com/premium_photo-1683121203379-ba4d4f27b933?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+        
+        .portfolio-filter button.active {
+            background-color: #b45309;
+            color: white;
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .before-after {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .before-after img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .before-after .before {
+            width: 50%;
+            z-index: 2;
+        }
+        
+        .before-after .slider {
+            position: absolute;
+            width: 4px;
+            background: white;
+            height: 100%;
+            z-index: 10;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        
+        .before-after .slider-button {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            z-index: 11;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 10% auto;
+            padding: 30px;
+            border: none;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .close {
+            color: #666;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        /* Form styles */
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+        .form-input:focus {
+            border-color: #b45309;
+            box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.1);
+        }
+
+        .form-error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Lazy loading */
+        img.lazy {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+
+        /* Welcome message */
+        .welcome-message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #b45309;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            z-index: 200;
+            animation: slideInRight 0.3s ease-in-out;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Social login buttons */
+        .social-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: medium;
+            transition: background-color 0.3s;
+        }
+
+        .google-login {
+            background-color: #ffffff;
+            border: 2px solid #e5e7eb;
+            color: #333;
+        }
+
+        .google-login:hover {
+            background-color: #f1f1f1;
+        }
+
+        .facebook-login {
+            background-color: #1877f2;
+            color: white;
+        }
+
+        .facebook-login:hover {
+            background-color: #166fe5;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800">
+    <!-- Welcome Message -->
+    <div id="welcome-message" class="welcome-message"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="new.html" class="text-2xl font-bold text-gray-900">
+                        <div class="flex items-center space-x-2">
+                            <img src="https://img.freepik.com/premium-vector/modern-dd-logo-design_786241-900.jpg" 
+                                 alt="Design & DayDream Logo" class="h-10 w-10 rounded-full">
+                            <span class="text-lg font-semibold">Design & DayDream</span>
+                          </div>                          
+                    </a>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Home</a>
+                        <a href="#portfolio" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Portfolio</a>
+                        <a href="#services" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Services</a>
+                        <a href="#about" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">About</a>
+                        <a href="#blog" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Blog</a>
+                        <a href="#testimonials" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Testimonials</a>
+                        <a href="#contact" class="text-gray-900 hover:text-amber-700 px-3 py-2 text-sm font-medium">Contact</a>
+                        <button id="login-btn" class="bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-md text-sm font-medium transition">Login</button>
+                    </div>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-y-0 right-0 w-64 bg-white shadow-lg z-50 pt-20">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Home</a>
+            <a href="#portfolio" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Portfolio</a>
+            <a href="#services" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Services</a>
+            <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">About</a>
+            <a href="#blog" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Blog</a>
+            <a href="#testimonials" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Testimonials</a>
+            <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100">Contact</a>
+            <button id="mobile-login-btn" class="block px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 w-full text-left">Login</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Welcome Back</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="login-email" class="block text-gray-700 font-medium mb-2">Email Address*</label>
+                    <input type="email" id="login-email" class="form-input w-full px-4 py-3 border rounded-md focus:outline-none" required>
+                    <p id="login-email-error" class="form-error hidden">Please enter a valid email address</p>
+                </div>
+                <div class="mb-4">
+                    <label for="login-password" class="block text-gray-700 font-medium mb-2">Password*</label>
+                    <input type="password" id="login-password" class="form-input w-full px-4 py-3 border rounded-md focus:outline-none" required>
+                    <p id="login-password-error" class="form-error hidden">Password must be at least 8 characters</p>
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2">
+                        <span class="text-gray-600 text-sm">Remember me</span>
+                    </label>
+                    <a href="#" class="text-amber-700 hover:text-amber-800 text-sm">Forgot Password?</a>
+                </div>
+                <button type="submit" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-4 rounded-md transition duration-300 mb-4">Sign In</button>
+                <div class="flex flex-col gap-3">
+                    <button type="button" class="social-login-btn google-login">
+                        <i class="fab fa-google"></i> Sign in with Google
+                    </button>
+                    <button type="button" class="social-login-btn facebook-login">
+                        <i class="fab fa-facebook-f"></i> Sign in with Facebook
+                    </button>
+                </div>
+            </form>
+            <p class="mt-6 text-center text-gray-600">New to Design & DayDream? <a href="#" id="show-signup" class="text-amber-700 hover:text-amber-800 font-medium">Create an account</a></p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Join Design & DayDream</h2>
+            <form id="signup-form">
+                <div class="mb-4">
+                    <label for="signup-name" class="block text-gray-700 font-medium mb-2">Full Name*</label>
+                    <input type="text" id="signup-name" class="form-input w-full px-4 py-3 i border rounded-md focus:outline-none" required>
+                    <p id="signup-name-error" class="form-error hidden">Please enter your full name</p>
+                </div>
+                <div class="mb-4">
+                    <label for="signup-email" class="block text-gray-700 font-medium mb-2">Email Address*</label>
+                    <input type="email" id="signup-email" class="form-input w-full px-4 py-3 border rounded-md focus:outline-none" required>
+                    <p id="signup-email-error" class="form-error hidden">Please enter a valid email address</p>
+                </div>
+                <div class="mb-4">
+                    <label for="signup-password" class="block text-gray-700 font-medium mb-2">Password*</label>
+                    <input type="password" id="signup-password" class="form-input w-full px-4 py-3 border rounded-md focus:outline-none" required>
+                    <p id="signup-password-error" class="form-error hidden">Password must be at least 8 characters</p>
+                </div>
+                <div class="mb-4">
+                    <label for="signup-confirm-password" class="block text-gray-700 font-medium mb-2">Confirm Password*</label>
+                    <input type="password" id="signup-confirm-password" class="form-input w-full px-4 py-3 border rounded-md focus:outline-none" required>
+                    <p id="signup-confirm-password-error" class="form-error hidden">Passwords do not match</p>
+                </div>
+                <div class="mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2" required>
+                        <span class="text-gray-600 text-sm">I agree to the <a href="#" class="text-amber-700 hover:text-amber-800">Terms & Conditions</a></span>
+                    </label>
+                </div>
+                <button type="submit" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-4 rounded-md transition duration-300 mb-4">Create Account</button>
+                <div class="flex flex-col gap-3">
+                    <button type="button" class="social-login-btn google-login">
+                        <i class="fab fa-google"></i> Sign up with Google
+                    </button>
+                    <button type="button" class="social-login-btn facebook-login">
+                        <i class="fab fa-facebook-f"></i> Sign up with Facebook
+                    </button>
+                </div>
+            </form>
+            <p class="mt-6 text-center text-gray-600">Already have an account? <a href="#" id="show-login" class="text-amber-700 hover:text-amber-800 font-medium">Sign in</a></p>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section id="home" class="hero-banner flex items-center justify-center text-white pt-20">
+        <div class="text-center px-4 max-w-4xl">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Transform Your Space With Elegant Design</h1>
+            <p class="text-xl md:text-2xl mb-8 font-light">Crafting timeless interiors that blend sophistication with personal style</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#contact" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block">Book Consultation</a>
+                <a href="#portfolio" class="border-2 border-white hover:bg-white hover:text-gray-900 text-white font-bold py-3 px-8 rounded-full transition duration-300 inline-block">Explore Portfolio</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Signature Projects</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Discover our curated collection of transformative designs</p>
+                <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Signature Projects" class="w-full h-full object-cover lazy" loading="lazy">
+                </div>
+            </div>
+            
+            <!-- Portfolio Filter -->
+            <div class="portfolio-filter flex flex-wrap justify-center gap-2 mb-12">
+                <button class="filter-button active px-4 py-2 rounded-full border border-gray-300 hover:bg-amber-700 hover:text-white hover:border-amber-700 transition" data-filter="all">
+                    All Projects
+                    <img src="https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="All Projects" class="w-8 h-8 inline-block ml-2 rounded-full lazy" loading="lazy">
+                </button>
+                <button class="filter-button px-4 py-2 rounded-full border border-gray-300 hover:bg-amber-700 hover:text-white hover:border-amber-700 transition" data-filter="residential">
+                    Residential
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Residential" class="w-8 h-8 inline-block ml-2 rounded-full lazy" loading="lazy">
+                </button>
+                <button class="filter-button px-4 py-2 rounded-full border border-gray-300 hover:bg-amber-700 hover:text-white hover:border-amber-700 transition" data-filter="commercial">
+                    Commercial
+                    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Commercial" class="w-8 h-8 inline-block ml-2 rounded-full lazy" loading="lazy">
+                </button>
+                <button class="filter-button px-4 py-2 rounded-full border border-gray-300 hover:bg-amber-700 hover:text-white hover:border-amber-700 transition" data-filter="office">
+                    Office
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Office" class="w-8 h-8 inline-block ml-2 rounded-full lazy" loading="lazy">
+                </button>
+            </div>
+            
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card portfolio-item residential" data-category="residential">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Modern Apartment" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Urban Oasis Apartment</h3>
+                        <p class="text-gray-600 mb-4">A contemporary urban retreat in Manhattan's heart</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Residential</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card portfolio-item commercial" data-category="commercial">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Boutique Hotel" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Coastal Boutique Hotel</h3>
+                        <p class="text-gray-600 mb-4">Elegant seaside hospitality design in Miami</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Commercial</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card portfolio-item office" data-category="office">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Tech Office" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Innovative Tech Hub</h3>
+                        <p class="text-gray-600 mb-4">Dynamic workspace for a Silicon Valley innovator</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Office</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="project-card portfolio-item residential" data-category="residential">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1615529182904-7c6b2836d83c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Luxury Villa" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Mediterranean Villa</h3>
+                        <p class="text-gray-600 mb-4">Timeless luxury overlooking the Amalfi Coast</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Residential</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="project-card portfolio-item commercial" data-category="commercial">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Restaurant" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Gastronomic Haven</h3>
+                        <p class="text-gray-600 mb-4">Sophisticated dining experience in New York</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Commercial</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="project-card portfolio-item office" data-category="office">
+                    <div class="h-64 overflow-hidden rounded-t-lg">
+                        <img src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Corporate Office" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="bg-white p-6 rounded-b-lg shadow-md">
+                        <h3 class="text-xl font-bold mb-2 text-gray-900">Corporate Excellence</h3>
+                        <p class="text-gray-600 mb-4">Modern headquarters for a global enterprise</p>
+                        <div class="flex justify-between items-center">
+                            <span class="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">Office</span>
+                            <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">View Project <i class="fas fa-arrow-right ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border-2 border-gray-900 text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-gray-900 hover:text-white transition duration-300">Discover More Projects</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Before/After Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Design Transformations</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Witness the magic of our before-and-after reveals</p>
+            </div>
+            
+            <div class="before-after relative rounded-lg shadow-lg mb-8">
+                <img src="https://plus.unsplash.com/premium_photo-1661915661139-5b6a4e4a6fcc?q=80&w=1567&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="After" class="w-full h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1693578616322-c8abe6c7393d?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Before" class="before">
+                <div class="slider"></div>
+                <div class="slider-button">
+                    <i class="fas fa-arrows-left-right"></i>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-gray-700 mb-4">Slide to see the transformation of a classic urban loft</p>
+                <a href="#portfolio" class="inline-block bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-8 rounded-full transition duration-300">View More Transformations</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Design Expertise</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Tailored solutions to bring your vision to life</p>
+                <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Design Expertise" class="w-full h-full object-cover lazy" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-ruler-combined text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">Space Planning</h3>
+                    <p class="text-gray-600 mb-4">Optimize your space with intelligent layouts.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Furniture arrangement</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Flow optimization</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Space zoning</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $500</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-cube text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">3D Visualization</h3>
+                    <p class="text-gray-600 mb-4">See your design in stunning detail before execution.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Photorealistic renders</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Virtual tours</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Material previews</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $800</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-palette text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">Color Consulting</h3>
+                    <p class="text-gray-600 mb-4">Curate the perfect palette for your space.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Mood creation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Color harmony</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Lighting analysis</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $350</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-couch text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">Furniture Curation</h3>
+                    <p class="text-gray-600 mb-4">Select pieces that elevate your space.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Bespoke selections</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Vendor management</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Installation oversight</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $1,200</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-lightbulb text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">Lighting Design</h3>
+                    <p class="text-gray-600 mb-4">Illuminate with purpose and style.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Ambient solutions</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Task lighting</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Accent features</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $600</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition duration-300">
+                    <div class="text-amber-700 mb-4">
+                        <i class="fas fa-home text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-900">Complete Design</h3>
+                    <p class="text-gray-600 mb-4">From vision to victory, we handle it all.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Full-service planning</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Project management</li>
+                        <li class="flex items-center"><i class="fas fa-check text-amber-700 mr-2"></i>Turnkey delivery</li>
+                    </ul>
+                    <div class="mt-6">
+                        <p class="text-gray-900 font-semibold">From $2,500</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#contact" class="inline-block border-2 border-amber-700 text-amber-700 font-bold py-3 px-8 rounded-full hover:bg-amber-700 hover:text-white transition duration-300">Request a Quote</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex items-center">
+                <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-900">Our Design Legacy</h2>
+                    <p class="text-gray-600 mb-6">Since 2012, Design & DayDream has crafted exceptional interiors that marry form and function, reflecting each client's unique story.</p>
+                    <p class="text-gray-600 mb-6">Our award-winning designers bring creativity and precision to every project, ensuring spaces that inspire and endure.</p>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">Our Vision</h3>
+                        <p class="text-gray-600">To redefine spaces with innovative design, superior craftsmanship, and unparalleled client experiences.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div><h4 class="font-bold text-gray-900 mb-2">15+</h4><p class="text-gray-600">Design Awards</p></div>
+                        <div><h4 class="font-bold text-gray-900 mb-2">200+</h4><p class="text-gray-600">Completed Projects</p></div>
+                        <div><h4 class="font-bold text-gray-900 mb-2">50+</h4><p class="text-gray-600">Happy Clients</p></div>
+                        <div><h4 class="font-bold text-gray-900 mb-2">10+</h4><p class="text-gray-600">Years of Excellence</p></div>
+                    </div>
+                    <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Design Legacy" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <div class="relative">
+                        <div class="w-full h-96 bg-gray-200 rounded-lg overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1628797279405-8cd6ffdbeb6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Our Studio" class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 w-48 h-48 bg-amber-700 rounded-lg overflow-hidden border-4 border-white shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Designer" class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Section -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-bold mb-8 text-center text-gray-900">Our Creative Team</h3>
+                
+                <div class="grid md:grid-cols-1 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+                        <div class="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
+                            <img src="musa.jpg" alt="Musawir Awan" class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                        <h4 class="text-xl font-bold mb-1 text-gray-900">Musawir Awan</h4>
+                        <p class="text-amber-700 font-medium mb-3">Interior Designer</p>
+                        <p class="text-gray-600">Expert in creating elegant and functional spaces with a focus on innovative design.</p>
+                        <div class="flex justify-center space-x-3 mt-4">
+                            <a href="https://www.linkedin.com" class="text-gray-400 hover:text-amber-700"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.instagram.com/design_and_daydream/?utm_source=ig_web_button_share_sheet" class="text-gray-400 hover:text-amber-700"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Blog Section -->
+    <section id="blog" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Design Insights</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore trends, tips, and inspiration from our experts</p>
+                <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Design Insights" class="w-full h-full object-cover lazy" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600585153490-76fb20a0f2c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="2023 Design Trends" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <span>May 5, 2025</span>
+                            <span class="mx-2">•</span>
+                            <span>5 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-gray-900">2025 Design Trends Unveiled</h3>
+                        <p class="text-gray-600 mb-4">Explore the latest in colors, textures, and styles shaping interiors.</p>
+                        <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">Read More <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1598928509261-90203cf2a3a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Small Space Solutions" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <span>May 28, 2023</span>
+                            <span class="mx-2">•</span>
+                            <span>7 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-gray-900">Smart Small Space Solutions</h3>
+                        <p class="text-gray-600 mb-4">Maximize compact areas with clever design strategies.</p>
+                        <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">Read More <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1615529182904-7c6b2836d83c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Sustainable Design" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-500 mb-2">
+                            <span>April 10, 2023</span>
+                            <span class="mx-2">•</span>
+                            <span>6 min read</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-gray-900">Eco-Conscious Design</h3>
+                        <p class="text-gray-600 mb-4">Create sustainable spaces with minimal environmental impact.</p>
+                        <a href="#" class="text-amber-700 hover:text-amber-900 font-medium">Read More <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border-2 border-gray-900 text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-gray-900 hover:text-white transition duration-300">Explore All Articles</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">What Our Clients Say</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Hear from those who’ve transformed their spaces with us</p>
+                <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                    <img src="https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Client Testimonials" class="w-full h-full object-cover lazy" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="testimonial-card p-8 rounded-lg border border-gray-700">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Jennifer & Mark" class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Jennifer & Mark T.</h4>
+                            <p class="text-gray-400">Homeowners</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"Our home feels like a dream. Design & DayDream captured our style perfectly, and the attention to detail is impeccable!"</p>
+                    <div class="text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card p-8 rounded-lg border border-gray-700">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="David R." class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">David R.</h4>
+                            <p class="text-gray-400">Tech CEO</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"The office design boosted our team's morale and productivity. A truly visionary approach!"</p>
+                    <div class="text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card p-8 rounded-lg border border-gray-700">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+                            <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Lisa M." class="w-full h-full object-cover lazy" loading="lazy">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Lisa M.</h4>
+                            <p class="text-gray-400">Hotelier</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"Our hotel’s new look has guests raving. The design is both luxurious and welcoming!"</p>
+                    <div class="text-amber-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#contact" class="inline-block bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-8 rounded-full transition duration-300">Share Your Story</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Let’s Create Together</h2>
+                    <p class="text-gray-600 mb-8">Ready to elevate your space? Connect with our team for a personalized consultation.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="text-amber-700 mr-4 mt-1"><i class="fas fa-map-marker-alt text-xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Visit Us</h3>
+                                <p class="text-gray-600">New Lalazar<br>Rawalpindi Pakistan</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-amber-700 mr-4 mt-1"><i class="fas fa-phone-alt text-xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Call Us</h3>
+                                <p class="text-gray-600">+92 311 6493610<br>Mon-Fri, 9am-6pm EST</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-amber-700 mr-4 mt-1"><i class="fas fa-envelope text-xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Email Us</h3>
+                                <p class="text-gray-600">info@designanddaydream.com<br>consultation@designanddaydream.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 h-64 rounded-lg overflow-hidden">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108856.55577918924!2d73.00903770309427!3d33.62605758521708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38df9565d36b20d7%3A0x49f2b30f0b578c2e!2sRawalpindi%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sus!4v1687893123456!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h3 class="font-bold text-gray-900 mb-4">Connect With Us</h3>
+                        <div class="flex space-x-4">
+                            <a href="https://www.instagram.com/design_and_daydream/?utm_source=ig_web_button_share_sheet" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-amber-700 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.pinterest.com" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-amber-700 hover:text-white transition"><i class="fab fa-pinterest"></i></a>
+                            <a href="https://www.facebook.com/share/1CZMeKhmuX/" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-amber-700 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.linkedin.com" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-amber-700 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="https://www.houzz.com" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-amber-700 hover:text-white transition"><i class="fab fa-houzz"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Schedule a Consultation</h3>
+                        <form id="contact-form">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-gray-700 font-medium mb-2">Name*</label>
+                                    <input type="text" id="name" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-gray-700 font-medium mb-2">Email*</label>
+                                    <input type="email" id="email" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none" required>
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-gray-700 font-medium mb-2">Phone</label>
+                                    <input type="tel" id="phone" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="project-type" class="block text-gray-700 font-medium mb-2">Project Type*</label>
+                                    <select id="project-type" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none" required>
+                                        <option value="">Select project type</option>
+                                        <option value="residential">Residential</option>
+                                        <option value="commercial">Commercial</option>
+                                        <option value="office">Office</option>
+                                        <option value="hospitality">Hospitality</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="budget" class="block text-gray-700 font-medium mb-2">Budget Range</label>
+                                <select id="budget" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none">
+                                    <option value="">Select budget range</option>
+                                    <option value="under-10k">Under $10,000</option>
+                                    <option value="10k-25k">$10,000 - $25,000</option>
+                                    <option value="25k-50k">$25,000 - $50,000</option>
+                                    <option value="50k-100k">$50,000 - $100,000</option>
+                                    <option value="over-100k">Over $100,000</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">Project Details*</label>
+                                <textarea id="message" rows="4" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none" required></textarea>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="consultation-date" class="block text-gray-700 font-medium mb-2">Preferred Date</label>
+                                <input type="date" id="consultation-date" class="form-input w-full px-4 py-2 border rounded-md focus:outline-none">
+                            </div>
+                            
+                            <div class="mt-8">
+                                <button type="submit" class="w-full bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-4 rounded-md transition duration-300">Submit Request</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-600 mb-3">Need instant help? Chat with us!</p>
+                        <a href="https://wa.me/+92 311 6493610" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
+                            <i class="fab fa-whatsapp text-xl mr-2"></i> Chat Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex items-center justify-between">
+                <div class="lg:w-1/2 mb-8 lg:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">Join Our Design Community</h3>
+                    <p class="text-gray-300">Receive exclusive design tips, trends, and offers.</p>
+                    <div class="mt-4 h-48 overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1615529182904-7c6b2836d83c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Design Community" class="w-full h-full object-cover lazy" loading="lazy">
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <form class="flex">
+                        <input type="email" placeholder="Your email address" class="form-input flex-grow px-4 py-3 rounded-l-md text-gray-900">
+                        <button type="submit" class="bg-amber-700 hover:bg-amber-800 px-6 py-3 rounded-r-md font-medium transition duration-300">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-4">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Design & DayDream" class="h-10">
+                    </h3>
+                    <p class="mb-4">Crafting spaces that inspire and endure.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/share/1CZMeKhmuX/" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/design_and_daydream/?utm_source=ig_web_button_share_sheet" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.pinterest.com" class="text-gray-400 hover:text-white"><i class="fab fa-pinterest"></i></a>
+                        <a href="https://www.linkedin.com" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white">Residential Design</a></li>
+                        <li><a href="#" class="hover:text-white">Commercial Design</a></li>
+                        <li><a href="#" class="hover:text-white">Office Design</a></li>
+                        <li><a href="#" class="hover:text-white">Space Planning</a></li>
+                        <li><a href="#" class="hover:text-white">3D Rendering</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="hover:text-white">About Us</a></li>
+                        <li><a href="#portfolio" class="hover:text-white">Portfolio</a></li>
+                        <li><a href="#testimonials" class="hover:text-white">Testimonials</a></li>
+                        <li><a href="#blog" class="hover:text-white">Blog</a></li>
+                        <li><a href="#contact" class="hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white">Design Tips</a></li>
+                        <li><a href="#" class="hover:text-white">Color Guides</a></li>
+                        <li><a href="#" class="hover:text-white">Furniture Buying Guide</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white">Download Brochure</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="mb-4 md:mb-0">© 2025 Design & DayDream. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                    <a href="#" class="hover:text-white">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileLinks = document.querySelectorAll('#mobile-menu a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // Portfolio filtering
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const filterValue = button.getAttribute('data-filter');
+                
+                portfolioItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Before/After slider
+        const beforeAfterContainer = document.querySelector('.before-after');
+        if (beforeAfterContainer) {
+            const beforeImage = beforeAfterContainer.querySelector('.before');
+            const slider = beforeAfterContainer.querySelector('.slider');
+            const sliderButton = beforeAfterContainer.querySelector('.slider-button');
+            let isDragging = false;
+
+            function moveSlider(e) {
+                if (!isDragging) return;
+
+                let xPos;
+                if (e.type === 'mousemove') {
+                    xPos = e.clientX - beforeAfterContainer.getBoundingClientRect().left;
+                } else {
+                    xPos = e.touches[0].clientX - beforeAfterContainer.getBoundingClientRect().left;
+                }
+
+                const containerWidth = beforeAfterContainer.offsetWidth;
+                xPos = Math.max(0, Math.min(xPos, containerWidth));
+
+                beforeImage.style.width = `${xPos}px`;
+                slider.style.left = `${xPos}px`;
+                sliderButton.style.left = `${xPos - (sliderButton.offsetWidth / 2)}px`;
+            }
+
+            function startDragging() {
+                isDragging = true;
+            }
+
+            function stopDragging() {
+                isDragging = false;
+            }
+
+            sliderButton.addEventListener('mousedown', startDragging);
+            sliderButton.addEventListener('touchstart', startDragging);
+            document.addEventListener('mouseup', stopDragging);
+            document.addEventListener('touchend', stopDragging);
+            document.addEventListener('mousemove', moveSlider);
+            document.addEventListener('touchmove', moveSlider);
+        }
+
+        // Modal functionality
+        const loginModal = document.getElementById('login-modal');
+        const signupModal = document.getElementById('signup-modal');
+        const loginBtn = document.getElementById('login-btn');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const closeButtons = document.getElementsByClassName('close');
+        const showSignupLink = document.getElementById('show-signup');
+        const showLoginLink = document.getElementById('show-login');
+        const welcomeMessage = document.getElementById('welcome-message');
+
+        function showWelcomeMessage(message) {
+            welcomeMessage.textContent = message;
+            welcomeMessage.style.display = 'block';
+            setTimeout(() => {
+                welcomeMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        loginBtn.onclick = function() {
+            loginModal.style.display = 'block';
+        }
+
+        mobileLoginBtn.onclick = function() {
+            loginModal.style.display = 'block';
+            mobileMenu.classList.add('hidden');
+        }
+
+        showSignupLink.onclick = function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            signupModal.style.display = 'block';
+        }
+
+        showLoginLink.onclick = function(e) {
+            e.preventDefault();
+            signupModal.style.display = 'none';
+            loginModal.style.display = 'block';
+        }
+
+        for (let i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].onclick = function() {
+        loginModal.style.display = 'none';
+        signupModal.style.display = 'none';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    if (event.target === loginModal) {
+        loginModal.style.display = 'none';
+    }
+    if (event.target === signupModal) {
+        signupModal.style.display = 'none';
+    }
+}
+
+// Form validation
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const contactForm = document.getElementById('contact-form');
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function showError(inputId, errorId, message) {
+    const errorElement = document.getElementById(errorId);
+    errorElement.textContent = message;
+    errorElement.classList.remove('hidden');
+}
+
+function clearErrors(formId) {
+    const errors = document.querySelectorAll(`#${formId} .form-error`);
+    errors.forEach(error => {
+        error.classList.add('hidden');
+        error.textContent = '';
+    });
+}
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearErrors('login-form');
+
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    let isValid = true;
+
+    if (!validateEmail(email)) {
+        showError('login-email', 'login-email-error', 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    if (password.length < 8) {
+        showError('login-password', 'login-password-error', 'Password must be at least 8 characters');
+        isValid = false;
+    }
+
+    if (isValid) {
+        // Simulate login
+        showWelcomeMessage('Welcome back! You are now logged in.');
+        loginModal.style.display = 'none';
+        loginForm.reset();
+    }
+});
+
+signupForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearErrors('signup-form');
+
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirm-password').value;
+    let isValid = true;
+
+    if (name.trim() === '') {
+        showError('signup-name', 'signup-name-error', 'Please enter your full name');
+        isValid = false;
+    }
+
+    if (!validateEmail(email)) {
+        showError('signup-email', 'signup-email-error', 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    if (password.length < 8) {
+        showError('signup-password', 'signup-password-error', 'Password must be at least 8 characters');
+        isValid = false;
+    }
+
+    if (password !== confirmPassword) {
+        showError('signup-confirm-password', 'signup-confirm-password-error', 'Passwords do not match');
+        isValid = false;
+    }
+
+    if (isValid) {
+        // Simulate signup
+        showWelcomeMessage('Welcome to Design & DayDream! Your account has been created.');
+        signupModal.style.display = 'none';
+        signupForm.reset();
+    }
+});
+
+contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearErrors('contact-form');
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const projectType = document.getElementById('project-type').value;
+    const message = document.getElementById('message').value;
+    let isValid = true;
+
+    if (name.trim() === '') {
+        showError('name', 'name-error', 'Please enter your name');
+        isValid = false;
+    }
+
+    if (!validateEmail(email)) {
+        showError('email', 'email-error', 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    if (projectType === '') {
+        showError('project-type', 'project-type-error', 'Please select a project type');
+        isValid = false;
+    }
+
+    if (message.trim() === '') {
+        showError('message', 'message-error', 'Please provide project details');
+        isValid = false;
+    }
+
+    if (isValid) {
+        // Simulate form submission
+        showWelcomeMessage('Thank you! Your consultation request has been submitted.');
+        contactForm.reset();
+    }
+});
+
+// Lazy load images
+const lazyImages = document.querySelectorAll('img.lazy');
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src || img.src;
+            img.classList.remove('lazy');
+            img.classList.add('loaded');
+            observer.unobserve(img);
+        }
+    });
+});
+
+lazyImages.forEach(img => imageObserver.observe(img));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>
